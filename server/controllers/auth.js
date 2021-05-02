@@ -9,11 +9,9 @@ exports.login = (req, res, next) => {
 };
 
 exports.forgotpassword = (req, res, next) => {
-  res.send("Forgto Password");
+  res.send("Forgot Password");
 };
 
 exports.resetpassword = (req, res, next) => {
   res.send("Reset Password");
 };
-
-
