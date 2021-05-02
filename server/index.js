@@ -1,20 +1,28 @@
-const express = require("express");
-
 require("dotenv").config({ path: "./configuration.env" });
+
+const express = require("express");
 
 const redirect = require("./routes/auth.js");
 
 const app = express();
+
+const connectDatabase = require("./config/databaseConfig.js");
+
+// Database connection
+connectDatabase();
 
 // middleware that allow us to get the data from the body
 app.use(express.json());
 
 app.use("/api/auth", redirect);
 
-
-
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
+const serverListeningPort = app.listen(PORT, () => {
   console.log(`Currently server is running at port ${PORT}`);
+});
+
+process.on("unhandeledRejection", (err, promise) => {
+  console.log(`Error : ${err}`);
+  serverListeningPort.close(() => process.exit(1));
 });

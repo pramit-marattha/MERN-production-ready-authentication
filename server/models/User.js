@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
       "Please insert valid email",
     ],
   },
-  passowrd: {
+  password: {
     type: String,
     required: [true, "Please insert password"],
     minlength: 6,
@@ -26,6 +26,19 @@ const UserSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPassowrdExpire: Date,
 });
+
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+UserSchema.methods.matchPasswords = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 const User = mongoose.model("User", UserSchema);
 
