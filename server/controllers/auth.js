@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 
 const User = require("../models/User.js");
+const ErrorHandler = require("../utils/errorHandler.js");
 
 exports.register = async (req, res, next) => {
   //   res.send("Register");
@@ -18,10 +19,11 @@ exports.register = async (req, res, next) => {
     });
   } catch (error) {
     // console.error(error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+    // res.status(500).json({
+    //   success: false,
+    //   error: error.message,
+    // });
+    next(error);
   }
 };
 
@@ -29,19 +31,22 @@ exports.login = async (req, res, next) => {
   // res.send("Login");
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(400).json({ success: false, error: "Enter email and password" });
+    // res.status(400).json({ success: false, error: "Enter email and password" });
+    return next(new ErrorHandler("Enter email and password", 400));
   }
 
   try {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      res.status(404).json({ success: false, error: "Invalid password" });
+      // res.status(404).json({ success: false, error: "Invalid password" });
+      return next(new ErrorHandler("Incorrect password"), 401);
     }
 
     const isMatched = await user.matchPasswords(password);
 
     if (!isMatched) {
-      res.status(404).json({ success: false, error: "Invalid password" });
+      return next(new ErrorHandler("Invalid password", 401));
+      // res.status(404).json({ success: false, error: "Invalid password" });
     }
 
     res.status(200).json({
@@ -49,7 +54,8 @@ exports.login = async (req, res, next) => {
       token: "yaudjdjddhink",
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    // res.status(500).json({ success: false, error: error.message });
+    next(error);
   }
 };
 

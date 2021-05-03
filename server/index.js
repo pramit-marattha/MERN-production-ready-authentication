@@ -4,6 +4,8 @@ const express = require("express");
 
 const redirect = require("./routes/auth.js");
 
+const errorResponse = require("./middleware/error.js");
+
 const app = express();
 
 const connectDatabase = require("./config/databaseConfig.js");
@@ -15,6 +17,9 @@ connectDatabase();
 app.use(express.json());
 
 app.use("/api/auth", redirect);
+
+// Error Handler
+app.use(errorResponse);
 
 const PORT = process.env.PORT || 4000;
 
