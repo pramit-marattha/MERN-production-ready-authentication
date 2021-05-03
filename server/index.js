@@ -3,6 +3,7 @@ require("dotenv").config({ path: "./configuration.env" });
 const express = require("express");
 
 const redirect = require("./routes/auth.js");
+const privateRouteRedirect = require("./routes/privateRoute.js");
 
 const errorResponse = require("./middleware/error.js");
 
@@ -17,6 +18,7 @@ connectDatabase();
 app.use(express.json());
 
 app.use("/api/auth", redirect);
+app.use("/api/private-route", privateRouteRedirect);
 
 // Error Handler
 app.use(errorResponse);
