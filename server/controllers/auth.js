@@ -2,6 +2,7 @@ const crypto = require("crypto");
 
 const User = require("../models/User.js");
 const ErrorHandler = require("../utils/errorHandler.js");
+const sendEmail = require("../utils/sendEmail.js");
 
 exports.register = async (req, res, next) => {
   //   res.send("Register");
@@ -63,11 +64,11 @@ exports.login = async (req, res, next) => {
 
 exports.forgotpassword = async (req, res, next) => {
   // res.send("Forgot Password");
-  const {email} = req.body;
+  const { email } = req.body;
   try {
-    const user = await User.findOne({email});
-    if (!user){
-      return next(new ErrorHandler("Email failed to sent",404))
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ErrorHandler("Email failed to sent", 404));
     }
 
     const resetToken = user.getResetPasswordToken();
@@ -75,7 +76,7 @@ exports.forgotpassword = async (req, res, next) => {
     await user.save();
 
     const resetUrl = `${process.env.RESET_URL_LINK}/password-reset/${resetToken}`;
-    
+
     const message = `
   <table cellspacing="0" border="0" cellpadding="0" width="100%" height:"100%" style="@import url(https://fonts.googleapis.com/css?family=poppins:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
     <tr>
@@ -106,8 +107,8 @@ exports.forgotpassword = async (req, res, next) => {
                       To reset your password, click the
                       following link and follow the guidelines.
                     </p>
-                    <a href="${resetUrl}" clicktracking=off style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
-                      Password</a>
+                    <button href="${resetUrl}" clicktracking=off style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
+                      Password</button>
                       <p>If the button is not working click here <a href="${resetUrl}" clicktracking=off>${resetUrl}</a></p>
                       
                   </td>
@@ -127,15 +128,25 @@ exports.forgotpassword = async (req, res, next) => {
       </td>
     </tr>
   </table>
-    `
+    `;
 
     try {
-      
+      await sendEmail({
+        to: user.email,
+        subject: "Password Reset",
+        text: message,
+      });
+      res.status(200).json({ success: true, data: "Email Sent" });
     } catch (error) {
-      
-    }
-  }catch(error){
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
 
+      await user.save();
+
+      return next(new ErrorHandler("Email failed to send", 500));
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
