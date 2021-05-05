@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -15,7 +17,7 @@ body {
 .form-group label,
 .form-group input {
   width: 100%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .form-group label {
@@ -48,7 +50,8 @@ body {
 }
 
 .btn-primary {
-  background-color: coral;
+  background-color: rgb(29, 208, 93);
+  border-radius: 20px;
   color: #fff;
 }
 
