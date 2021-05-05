@@ -31,9 +31,7 @@ const ResetPassword = ({ match }) => {
     try {
       const { data } = await axios.put(
         `/api/auth/reset-password/${match.params.resetToken}`,
-        {
-          password,
-        },
+        { password },
         config
       );
 
@@ -65,7 +63,7 @@ const ResetPassword = ({ match }) => {
             placeholder="Enter new password"
             autoComplete="true"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
         <div className="form-group">

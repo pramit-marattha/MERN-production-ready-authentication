@@ -107,9 +107,9 @@ exports.forgotpassword = async (req, res, next) => {
                       To reset your password, click the
                       following link and follow the guidelines.
                     </p>
-                    <button href="${resetUrl}" clicktracking=off style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
+                    <button href="${resetUrl}" style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
                       Password</button>
-                      <p>If the button is not working click here <a href="${resetUrl}" clicktracking=off>${resetUrl}</a></p>
+                      <p>If the button is not working click here<p><br/> <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
                       
                   </td>
                 </tr>
@@ -153,7 +153,7 @@ exports.forgotpassword = async (req, res, next) => {
 exports.resetpassword = async (req, res, next) => {
   const resetPasswordToken = crypto
     .createHash("sha256")
-    .update(req.params.resetTokens)
+    .update(req.params.resetToken)
     .digest("hex");
 
   try {
@@ -171,9 +171,11 @@ exports.resetpassword = async (req, res, next) => {
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    res
-      .status(201)
-      .josn({ success: true, data: "Successfully reseted password" });
+    res.status(201).josn({
+      success: true,
+      data: "Successfully reseted password",
+      token: user.getSignedToken(),
+    });
   } catch (error) {
     next(error);
   }
