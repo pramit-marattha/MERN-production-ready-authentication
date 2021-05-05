@@ -28,6 +28,9 @@ const PrivateRoute = ({ history }) => {
     fetchingPrivateInfos();
   }, [history]);
 
+  const favicon = document.getElementById("favicon");
+  favicon.href = "https://twemoji.maxcdn.com/2/svg/1f513.svg";
+
   const handleOnClick = () => {
     localStorage.removeItem("authToken");
     history.push("/login");
