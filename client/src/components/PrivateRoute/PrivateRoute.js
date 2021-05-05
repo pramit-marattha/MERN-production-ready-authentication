@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import Landing from "../Landing";
+
 const PrivateRoute = ({ history }) => {
   const [error, setError] = useState("");
   const [privateInfo, setPrivateInfo] = useState("");
@@ -35,8 +37,9 @@ const PrivateRoute = ({ history }) => {
     <span className="error-message">{error}</span>
   ) : (
     <>
-      <div style={{ background: "green", color: "white" }}>{privateInfo}</div>
-      <button onClick={handleOnClick}>Logout</button>
+      {/* <div style={{ background: "green", color: "white" }}>{privateInfo}</div> */}
+      <Landing privateInfo={privateInfo} handleOnClick={handleOnClick} />
+      {/* <button onClick={handleOnClick}>Logout</button> */}
     </>
   );
 };

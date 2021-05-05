@@ -42,7 +42,7 @@ const ForgotPassword = () => {
         <div className="form-group">
           <p className="forgotpassword__subtext">
             Please enter the email address you entered while registering
-            account.Reset password link will be sent to that specific email
+            account.
           </p>
           <label htmlFor="email">Email:</label>
           <input
