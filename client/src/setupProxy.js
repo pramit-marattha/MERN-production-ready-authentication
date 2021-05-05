@@ -5,7 +5,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: process.env.REACT_APP_PROXY_ROUTE,
+      target: "https://mern-production-authentication.herokuapp.com",
       changeOrigin: true,
     })
   );
